@@ -1,24 +1,6 @@
 function stem = porterStemmer(inString)
-% Applies the Porter Stemming algorithm as presented in the following
-% paper:
-% Porter, 1980, An algorithm for suffix stripping, Program, Vol. 14,
-%   no. 3, pp 130-137
 
-% Original code modeled after the C version provided at:
-% http://www.tartarus.org/~martin/PorterStemmer/c.txt
-
-% The main part of the stemming algorithm starts here. b is an array of
-% characters, holding the word to be stemmed. The letters are in b[k0],
-% b[k0+1] ending at b[k]. In fact k0 = 1 in this demo program (since
-% matlab begins indexing by 1 instead of 0). k is readjusted downwards as
-% the stemming progresses. Zero termination is not in fact used in the
-% algorithm.
-
-% To call this function, use the string to be stemmed as the input
-% argument.  This function returns the stemmed word as a string.
-
-% Lower-case string
-inString = lower(inString);
+inString = lower(inString); % Lower-case string
 
 global j;
 b = inString;
@@ -26,31 +8,18 @@ k = length(b);
 k0 = 1;
 j = k;
 
-
-
-% With this if statement, strings of length 1 or 2 don't go through the
-% stemming process. Remove this conditional to match the published
-% algorithm.
 stem = b;
 if k > 2
-    % Output displays per step are commented out.
-    %disp(sprintf('Word to stem: %s', b));
+   
     x = step1ab(b, k, k0);
-    %disp(sprintf('Steps 1A and B yield: %s', x{1}));
     x = step1c(x{1}, x{2}, k0);
-    %disp(sprintf('Step 1C yields: %s', x{1}));
     x = step2(x{1}, x{2}, k0);
-    %disp(sprintf('Step 2 yields: %s', x{1}));
     x = step3(x{1}, x{2}, k0);
-    %disp(sprintf('Step 3 yields: %s', x{1}));
     x = step4(x{1}, x{2}, k0);
-    %disp(sprintf('Step 4 yields: %s', x{1}));
     x = step5(x{1}, x{2}, k0);
-    %disp(sprintf('Step 5 yields: %s', x{1}));
     stem = x{1};
 end
 
-% cons(j) is TRUE <=> b[j] is a consonant.
 function c = cons(i, b, k0)
 c = true;
 switch(b(i))
@@ -64,15 +33,6 @@ switch(b(i))
         end
 end
 
-% mseq() measures the number of consonant sequences between k0 and j.  If
-% c is a consonant sequence and v a vowel sequence, and <..> indicates
-% arbitrary presence,
-
-%      <c><v>       gives 0
-%      <c>vc<v>     gives 1
-%      <c>vcvc<v>   gives 2
-%      <c>vcvcvc<v> gives 3
-%      ....
 function n = measure(b, k0)
 global j;
 n = 0;
@@ -135,14 +95,6 @@ if b(i) ~= b(i-1)
 end
 dc = cons(i, b, k0);
 
-
-% cvc(j) is TRUE <=> j-2,j-1,j has the form consonant - vowel - consonant
-% and also if the second c is not w,x or y. this is used when trying to
-% restore an e at the end of a short word. e.g.
-%
-%      cav(e), lov(e), hop(e), crim(e), but
-%      snow, box, tray.
-
 function c1 = cvc(i, b, k0)
 if ((i < (k0+2)) || ~cons(i, b, k0) || cons(i-1, b, k0) || ~cons(i-2, b, k0))
     c1 = false;
@@ -173,9 +125,6 @@ else
     s = false;
 end
 
-% setto(s) sets (j+1),...k to the characters in the string s, readjusting
-% k accordingly.
-
 function so = setto(s, b, k)
 global j;
 for i = j+1:(j+length(s))
@@ -194,26 +143,6 @@ r = {b, k};
 if measure(b, k0) > 0
     r = setto(str, b, k);
 end
-
-% step1ab() gets rid of plurals and -ed or -ing. e.g.
-
-%       caresses  ->  caress
-%       ponies    ->  poni
-%       ties      ->  ti
-%       caress    ->  caress
-%       cats      ->  cat
-
-%       feed      ->  feed
-%       agreed    ->  agree
-%       disabled  ->  disable
-
-%       matting   ->  mat
-%       mating    ->  mate
-%       meeting   ->  meet
-%       milling   ->  mill
-%       messing   ->  mess
-
-%       meetings  ->  meet
 
 function s1ab = step1ab(b, k, k0)
 global j;
@@ -265,9 +194,6 @@ end
 j = k;
 s1c = {b, k};
 
-% step2() maps double suffices to single ones. so -ization ( = -ize plus
-% -ation) maps to -ize etc. note that the string before the suffix must give
-% m() > 0.
 function s2 = step2(b, k, k0)
 global j;
 s2 = {b, k};
