@@ -1,11 +1,6 @@
 function file_contents = readFile(filename)
-%READFILE reads a file and returns its entire contents 
-%   file_contents = READFILE(filename) reads a file and returns its entire
-%   contents in file_contents
-%
 
-% Load File
-fid = fopen(filename);
+fid = fopen(filename); % Load File
 if fid
     file_contents = fscanf(fid, '%c', inf);
     fclose(fid);
