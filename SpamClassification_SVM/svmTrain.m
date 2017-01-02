@@ -1,24 +1,5 @@
 function [model] = svmTrain(X, Y, C, kernelFunction, ...
                             tol, max_passes)
-%SVMTRAIN Trains an SVM classifier using a simplified version of the SMO 
-%algorithm. 
-%   [model] = SVMTRAIN(X, Y, C, kernelFunction, tol, max_passes) trains an
-%   SVM classifier and returns trained model. X is the matrix of training 
-%   examples.  Each row is a training example, and the jth column holds the 
-%   jth feature.  Y is a column matrix containing 1 for positive examples 
-%   and 0 for negative examples.  C is the standard SVM regularization 
-%   parameter.  tol is a tolerance value used for determining equality of 
-%   floating point numbers. max_passes controls the number of iterations
-%   over the dataset (without changes to alpha) before the algorithm quits.
-%
-% Note: This is a simplified version of the SMO algorithm for training
-%       SVMs. In practice, if you want to train an SVM classifier, we
-%       recommend using an optimized package such as:  
-%
-%           LIBSVM   (http://www.csie.ntu.edu.tw/~cjlin/libsvm/)
-%           SVMLight (http://svmlight.joachims.org/)
-%
-%
 
 if ~exist('tol', 'var') || isempty(tol)
     tol = 1e-3;
@@ -44,12 +25,6 @@ eta = 0;
 L = 0;
 H = 0;
 
-% Pre-compute the Kernel Matrix since our dataset is small
-% (in practice, optimized SVM packages that handle large datasets
-%  gracefully will _not_ do this)
-% 
-% We have implemented optimized vectorized version of the Kernels here so
-% that the svm training will run faster.
 if strcmp(func2str(kernelFunction), 'linearKernel')
     % Vectorized computation for the Linear Kernel
     % This is equivalent to computing the kernel on every pair of examples
