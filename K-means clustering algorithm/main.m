@@ -1,4 +1,4 @@
-%% Machine Learning Online Class || K-Means Clustering
+%% Machine Learning || K-Means Clustering
 
 %% Initialization
 clear ; close all; clc
